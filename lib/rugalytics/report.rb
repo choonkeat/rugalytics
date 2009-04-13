@@ -4,9 +4,10 @@ module Rugalytics
 
     include MorphLessMethodMissing
 
-    attr_reader :base_url, :start_date, :end_date, :name
+    attr_reader :base_url, :start_date, :end_date, :name, :csv
 
     def initialize csv=''
+      @csv = csv
       return if csv.empty?
       lines = csv.split("\n")
       set_attributes lines
