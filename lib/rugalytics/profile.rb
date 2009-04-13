@@ -170,16 +170,20 @@ module Rugalytics
 
     private
 
+      def puts_debug *args
+        puts *args if ENV['DEBUG']
+      end
+
       def create_report(name, options={})
         options = options.merge({:report=>name})
         csv = get_report_csv(options)
         begin
           report = Rugalytics::Report.new csv
-          puts report.attribute_names
+          puts_debug report.attribute_names
           report
         rescue Exception => e
-          puts convert_options_to_uri_params(options).inspect
-          puts csv
+          puts_debug convert_options_to_uri_params(options).inspect
+          puts_debug csv
           raise e
         end
       end

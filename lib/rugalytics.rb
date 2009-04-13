@@ -50,11 +50,15 @@ module Rugalytics
       end
     end
 
+    def puts_debug *args
+      puts *args if ENV['DEBUG']
+    end
+
     def reports
       profile = Rugalytics.default_profile
       names = profile.report_names
-      puts names
-      names.collect {|n| puts ''; puts n; profile.send(n.to_sym)}
+      puts_debug names
+      names.collect {|n| puts_debug ''; puts_debug n; profile.send(n.to_sym)}
     end
 
     def default_profile
