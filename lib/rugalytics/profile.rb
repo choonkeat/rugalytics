@@ -37,6 +37,7 @@ module Rugalytics
           'manage_emails', 'manage_segments', 'user_defined', 'audio',
           'custom_reports_overview', 'site_search_intro', 'tv']
         names = reports.collect { |name| name[1] } - non_report_names
+        names += ['events']
         more_names = []
 
         names.each do |name|
@@ -90,6 +91,7 @@ module Rugalytics
       }
       params[:d1] = options[:url] if options[:url]
       params[:d1] = options[:page_title] if options[:page_title]
+      params[:d1] = options[:category] if options[:category]
       if options[:keywords]
         params[:d1] = options[:keywords].gsub(' ','+')
         params[:seg] = '1'
@@ -158,6 +160,11 @@ module Rugalytics
       visits_report(options).visits_by_day
     end
 
+    # e.g. profile.events_report_for_category('signup_event')
+    def events_report_for_category(event_category_name, options = {})
+      event_objects_report({:report => 'content.EventObjectDetail', :category => event_category_name}.merge(options))
+    end
+
     # takes a Date, Time or String
     def ensure_datetime_in_google_format(time)
       time = Date.parse(time) if time.is_a?(String)
@@ -175,7 +182,7 @@ module Rugalytics
       end
 
       def create_report(name, options={})
-        options = options.merge({:report=>name})
+        options = {:report=>name}.merge(options)
         csv = get_report_csv(options)
         begin
           report = Rugalytics::Report.new csv
